@@ -1,21 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState} from 'react';
+import { Text, View, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import styled from 'styled-components/native'
+import CreateNoteButton from './src/CreateNote'
 
-export default function App() {
+const App = () => {
+
+
+  const Safearea = styled.SafeAreaView`
+    flex: 1;
+    paddingTop: ${StatusBar.currentHeight};
+  `;
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Safearea >
+      <View>
+        <Text> HelloWorld</Text>
+      </View>
+      <CreateNoteButton />
+    </Safearea>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+export default App;
