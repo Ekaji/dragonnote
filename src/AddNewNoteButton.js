@@ -1,12 +1,13 @@
 import React from 'react'
 import styled from 'styled-components/native';
 import { Button, View, useWindowDimensions } from 'react-native';
-
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 
-const CreateButton = ({ navigation }) => {
+const CreateButton = () => {
+    // useNavigation is a hook which gives access to the navigation object https://reactnavigation.org/docs/connecting-navigation-prop
+    const navigation = useNavigation();
+    //get the width of the screen
     const windowWidth = useWindowDimensions().width;
 
     const CreateNoteButtonContainer = styled.View`
@@ -25,7 +26,9 @@ const CreateButton = ({ navigation }) => {
  
     return(
         <CreateNoteButtonContainer > 
-            <CreateNoteButton title= '+' color="#f194ff" name='button' onPress={() => navigation.navigate('createnote')} />
+            <CreateNoteButton title= '+' color="#f194ff" name='button' onPress={() => navigation.navigate('Createnote', 
+                {id: id, title: '', content: ''}
+                )} />
         </CreateNoteButtonContainer>
     )
 }
