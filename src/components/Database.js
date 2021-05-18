@@ -9,7 +9,7 @@ const setupDatabaseAsync = async () => {
     return new Promise( ( resolve, reject ) => {
         db.transaction( tx => {
             tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, content TEXT)'
+                'CREATE TABLE IF NOT EXISTS notes (id TEXT, title TEXT, content TEXT)'
             );
         },
         ( _, error ) => { console.log( 'db error creating TABLES' ); console.log( error ); reject( error ) },
@@ -18,12 +18,13 @@ const setupDatabaseAsync = async () => {
     })
 }
 
-   const fetchData = (setNote) => {
+//get item
+   const fetchData = (getNote) => {
         db.transaction(tx => {
           // sending 4 arguments in executeSql
           tx.executeSql('SELECT * FROM notes', null, // passing sql query and parameters:null
             // success callback which sends two things Transaction object and ResultSet Object
-            ( _, { rows: { _array } }) => setNote({ _array }),
+            ( _, { rows: { _array } }) => getNote({ _array }),
             // failure callback which sends two things Transaction object and Error
             ( _, error) => console.log('Error ', error)
             ) // end executeSQL
@@ -32,9 +33,13 @@ const setupDatabaseAsync = async () => {
 
 
 // create new notes
-const insertNote = ( title, content ) => { 
+const insertNote = ( noteTitle, noteContent ) => { 
+  // if (title || content === null) { return }
+  const date = new Date();
+  const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+  const id = creationDate.toString()
     db.transaction( tx => { 
-        tx.executeSql( 'INSERT INTO notes (title, content ) values(?, ?)', [title, content] )
+        tx.executeSql( 'INSERT INTO notes (id, title, content ) values(?, ?, ?)', [id, noteTitle, noteContent] )
     },
         ( t, error ) => { console.log( 'error inserting into notes'); console.log( error ) },
         //successFunc( ) refreshes the database after user has been inserted so change would be reflected
@@ -42,13 +47,26 @@ const insertNote = ( title, content ) => {
     )
 }
 
+
+
+// const insertNote = (noteTitle, noteContent, setNote) => {
+//     db.transaction(tx => {
+//       tx.executeSql('INSERT INTO notes (title, content) values (?, ?)', [noteTitle, noteContent],
+//         (txObj, resultSet) => setNote({ data: this.state.data.concat(
+//             { id: resultSet.insertId, title: noteTitle, content: noteContent }) }),
+//         (txObj, error) => console.log('Error', error))
+//     })
+//   }
+
+
+
 //delete table
 //comment out in production
 const dropDatabaseTable = async () => {
     return new Promise( ( resolve, reject) => {
         db.transaction( tx => { 
             tx.executeSql('DROP TABLE notes', [],
-            (_, result) => { resolve(result) },
+            (_, result) => { resolve(result); console.log( 'table droped' )},
             (_, error) => { console.log("error dropping users table"); reject(error) }
             )
         })
@@ -57,8 +75,11 @@ const dropDatabaseTable = async () => {
 
 const setupUsersAsync = async () => {
     return new Promise((resolve, _reject) => {
+        const date = new Date();
+        const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        const id = creationDate.toString()
       db.transaction( tx => {
-          tx.executeSql( 'INSERT INTO notes (id, title, content) values (?,?,?)', [4, "Roses", "Roses are red"] );
+          tx.executeSql( 'INSERT INTO notes (id, title, content) values (?,?,?)', [id, "Roses", "Roses are red"] );
         },
         (t, error) => { console.log("db error insertUser"); console.log(error); resolve() },
         (t, success) => { console.log('setupUsersAsync successfull'); resolve(success)}

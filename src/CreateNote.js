@@ -1,46 +1,76 @@
 import React from 'react';
-import { useState, useEffect} from 'react';
+import { useState, useEffect, createContext, useLayoutEffect } from 'react';
 import styled from 'styled-components/native';
-import { View, StyleSheet, Text, TextInput, } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Button} from 'react-native';
 
-const CreateNote = ({ route }) => {
+import { database } from './components/Database'
+import loadDataAsync from '../App'
+
+const CreateNote = ({ route, navigation }) => {
     // receives id, title and content props for use in editing
-    const {id, title, content } = route.params;
+    const { title, content } = route.params;
 
-    const [noteTitle, onChangeText] = useState(title);
-    const [noteContent, onChangeNote] = useState(content);
+    const [noteTitle, setTitleOnChange] = useState(title);
+    const [noteContent, setNoteOnChange] = useState(content);
 
     const date = new Date();
     const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes();
 
-//not using styled components because of a bug where the keyboard disapears with every keystroke
-    const styles = StyleSheet.create({
-        textInputTitle: {
-            fontSize: 20,
-            fontWeight: 'bold',
-            height: 32,
-            margin: 12,
-            },
+    const insertDataFunc = () => {
+        database.insertNote( noteTitle, noteContent )
+}
 
-        textInputNote: {
-            fontSize: 20,
-            margin: 12,
-            },
 
-        timearea: {
-            margin: 12,
-            }
-        },
-
-    );
+useEffect(() => {
+        navigation.setOptions({
+          headerRight: () => (
+            <Button onPress={() => {
+              insertDataFunc()
+            } } 
+            title="save" />
+          ),
+        });
+      }, );
 
     return (
-        <View>
-            <Text style= {styles.timearea}>{  creationDate  }</Text>
-            <TextInput style={styles.textInputTitle} placeholder = 'title'  onChangeText = { onChangeText } value = {noteTitle} />
-            <TextInput style={styles.textInputNote} placeholder = 'write something'  onChangeText = { onChangeNote } value = {noteContent} />
-        </View>
+     <View >
+      <Text style= {styles.timearea}>{  creationDate  }</Text>
+        <TextInput  style={styles.textInputTitle}
+                    multiline={true}
+                    maxLength={50}
+                    placeholder = 'title' 
+                    value = {noteTitle}
+                    onChangeText = { text => setTitleOnChange( text ) } 
+                    />
+
+        <TextInput  style={styles.textInputNote}
+                    multiline={true}
+                    placeholder = 'write something' 
+                    value = {noteContent} 
+                    onChangeText = { text => setNoteOnChange( text) } 
+                    />
+      </View>
     )
 };
+
+//not using styled components because of a bug where the keyboard disapears with every keystroke
+const styles = StyleSheet.create({
+    textInputTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        height: 32,
+        margin: 12,
+        },
+
+    textInputNote: {
+        fontSize: 20,
+        margin: 12,
+        },
+
+    timearea: {
+        margin: 12,
+        }
+    },
+);
 
 export default CreateNote;

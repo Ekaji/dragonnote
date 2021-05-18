@@ -1,8 +1,10 @@
+// force the state to clear with fast refresh in Expo
+// @refresh reset
 import React from 'react';
 import { useState, useEffect} from 'react';
-import { View , Text, FlatList, TouchableOpacity} from 'react-native'
+import { View , Text, FlatList, TouchableOpacity, Button} from 'react-native'
 import styled from 'styled-components/native';
-import CreateNoteButton from './AddNewNoteButton';
+import CreateNoteButton from './CreateNoteButton';
 import { useNavigation } from '@react-navigation/native';
 
 import { database } from './components/Database';
@@ -29,7 +31,9 @@ const NotesInfo = ({ id, title, content }) => {
     `;
 
     return(
-        <TouchableOpacity onPress={() => navigation.navigate('Createnote', {id: id, title: title, content: content})}>
+        <TouchableOpacity onPress={() => navigation.navigate('Createnote', 
+                          {id: id, title: title, content: content}
+        )}>
             <Notesview  >
                 <Text_Title>{ title }</Text_Title>
                 <Text>{ content }</Text>
@@ -39,21 +43,22 @@ const NotesInfo = ({ id, title, content }) => {
 }
 
 
-const Home = () => {
 
-    const [ note, setNote ] = useState(notesData);
-    console.log(note._array, )
+const Home = () => {
+    const [ note, getNote ] = useState(notesData);
+    console.log(note._array, 'testing' )
+
+    const fetchDataAsync =  () => {
+        // try{
+             database.fetchData(getNote)
+        // } catch(e){
+        //     console.log(e)
+        // }
+    }
 
       useEffect(() => {
-        const loadDataAsync = async () => {
-           try{
-                database.fetchData(setNote)
-
-           } catch(e){
-               console.log(e)
-           }
-       }
-        loadDataAsync();
+        fetchDataAsync(getNote);
+        console.log('loaded from home comp')
    },[])
 
 
@@ -68,7 +73,7 @@ const Home = () => {
             <FlatList 
                 data={note._array}
                 renderItem = {renderItem}
-                keyExtractor = {item => item.id}
+                keyExtractor = {item => item.id.toString()}
             />
             <CreateNoteButton />
         </>

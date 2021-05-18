@@ -25,10 +25,9 @@ const CreateButton = () => {
     `;
  
     return(
+        // button component for navigation
         <CreateNoteButtonContainer > 
-            <CreateNoteButton title= '+' color="#f194ff" name='button' onPress={() => navigation.navigate('Createnote', 
-                {id: id, title: '', content: ''}
-                )} />
+            <CreateNoteButton title= '+' color="#f194ff" name='button' onPress={() => navigation.navigate('Createnote', { title: '', content: ''} )} />
         </CreateNoteButtonContainer>
     )
 }
