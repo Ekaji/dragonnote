@@ -4,7 +4,8 @@ import styled from 'styled-components/native';
 import { View, StyleSheet, Text, TextInput, Button} from 'react-native';
 
 import { database } from './components/Database'
-import loadDataAsync from '../App'
+
+export const bool = false;
 
 const CreateNote = ({ route, navigation }) => {
     // receives id, title and content props for use in editing
@@ -19,6 +20,7 @@ const CreateNote = ({ route, navigation }) => {
     const insertDataFunc = () => {
         database.insertNote( noteTitle, noteContent )
 }
+
 
 
 useEffect(() => {

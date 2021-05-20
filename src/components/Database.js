@@ -48,49 +48,38 @@ const insertNote = ( noteTitle, noteContent ) => {
 }
 
 
+//comment out the below code in production
+//delete table
+// const dropDatabaseTable = async () => {
+//     return new Promise( ( resolve, reject) => {
+//         db.transaction( tx => { 
+//             tx.executeSql('DROP TABLE notes', [],
+//             (_, result) => { resolve(result); console.log( 'table droped' )},
+//             (_, error) => { console.log("error dropping users table"); reject(error) }
+//             )
+//         })
+//     })  
+// }
 
-// const insertNote = (noteTitle, noteContent, setNote) => {
-//     db.transaction(tx => {
-//       tx.executeSql('INSERT INTO notes (title, content) values (?, ?)', [noteTitle, noteContent],
-//         (txObj, resultSet) => setNote({ data: this.state.data.concat(
-//             { id: resultSet.insertId, title: noteTitle, content: noteContent }) }),
-//         (txObj, error) => console.log('Error', error))
+// adds note setup for developement and tesytting
+// const setupNoteAsync = async () => {
+//     return new Promise((resolve, _reject) => {
+//         const date = new Date();
+//         const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+//         const id = creationDate.toString()
+//       db.transaction( tx => {
+//           tx.executeSql( 'INSERT INTO notes (id, title, content) values (?,?,?)', [id, "Roses", "Roses are red"] );
+//         },
+//         (t, error) => { console.log("db error insertUser"); console.log(error); resolve() },
+//         (t, success) => { console.log('setupUsersAsync successfull'); resolve(success)}
+//       )
 //     })
 //   }
 
-
-
-//delete table
-//comment out in production
-const dropDatabaseTable = async () => {
-    return new Promise( ( resolve, reject) => {
-        db.transaction( tx => { 
-            tx.executeSql('DROP TABLE notes', [],
-            (_, result) => { resolve(result); console.log( 'table droped' )},
-            (_, error) => { console.log("error dropping users table"); reject(error) }
-            )
-        })
-    })  
-}
-
-const setupUsersAsync = async () => {
-    return new Promise((resolve, _reject) => {
-        const date = new Date();
-        const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-        const id = creationDate.toString()
-      db.transaction( tx => {
-          tx.executeSql( 'INSERT INTO notes (id, title, content) values (?,?,?)', [id, "Roses", "Roses are red"] );
-        },
-        (t, error) => { console.log("db error insertUser"); console.log(error); resolve() },
-        (t, success) => { console.log('setupUsersAsync successfull'); resolve(success)}
-      )
-    })
-  }
-
   export const database = {
+//    setupNoteAsync,
+//    dropDatabaseTable,
       setupDatabaseAsync,
-      dropDatabaseTable,
-      setupUsersAsync,
       insertNote,
       fetchData,
   }

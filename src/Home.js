@@ -1,7 +1,7 @@
 // force the state to clear with fast refresh in Expo
 // @refresh reset
 import React from 'react';
-import { useState, useEffect} from 'react';
+import { useState, useEffect, useLayoutEffect} from 'react';
 import { View , Text, FlatList, TouchableOpacity, Button} from 'react-native'
 import styled from 'styled-components/native';
 import CreateNoteButton from './CreateNoteButton';
@@ -14,7 +14,6 @@ const notesData = [
     id: 1,
     title: 'the rose that grew from concret',
     content: "Did you hear about the rose that grew from a crack in the concrete? Proving natures law is wrong it learned to walk with out having feet. Funny it seems, but by keeping its dreams, it learned to breathe fresh air. Long live the rose that grew from concrete when no one else ever cared.",
-    color: '#0c7b93',
     }
 ];
 
@@ -43,22 +42,33 @@ const NotesInfo = ({ id, title, content }) => {
 }
 
 
-
-const Home = () => {
+const Home = ({navigation}) => {
     const [ note, getNote ] = useState(notesData);
     console.log(note._array, 'testing' )
+// 
 
-    const fetchDataAsync =  () => {
-        // try{
-             database.fetchData(getNote)
-        // } catch(e){
-        //     console.log(e)
-        // }
+const loadDataAsync = async () => {
+    try{
+        // usefull in developement
+        // database.dropDatabaseTable(); 
+        // database.setupNoteAsync();
+        database.setupDatabaseAsync();
+        database.fetchData(getNote)
+
+    } catch(e){
+        console.log(e)
     }
+  }
 
-      useEffect(() => {
-        fetchDataAsync(getNote);
-        console.log('loaded from home comp')
+
+    useEffect(() => {
+        //loads data when app starts the first time
+        loadDataAsync();
+        //fetch data when screen comes into focus
+        const reloadData = navigation.addListener('focus', () => {
+            loadDataAsync();
+        })
+        return reloadData
    },[])
 
 

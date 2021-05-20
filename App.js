@@ -10,24 +10,9 @@ import styled from 'styled-components/native';
 import CreateNote from './src/CreateNote';
 import Home from './src/Home'
 
-import { database } from './src/components/Database'
-
-export const loadDataAsync = async () => {
-  try{
-    // await database.dropDatabaseTable();
-     database.setupDatabaseAsync();
-     database.setupUsersAsync();
-  } catch(e){
-      console.log(e)
-  }
-}
 
 const App = ( ) => {
   const Stack = createStackNavigator();
-
-  useLayoutEffect(() => {
-     loadDataAsync();
-},)
 
   const Safearea = styled.SafeAreaView`
     flex: 1;
@@ -41,7 +26,8 @@ const App = ( ) => {
           <Stack.Screen 
            name = 'Home' 
            component = { Home }
-           options={{ title: 'Dragon_Note' }} />
+           options={{title: 'Dragon_Note' }}
+          />
 
           <Stack.Screen
             name = 'Createnote' 
