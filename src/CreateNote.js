@@ -9,7 +9,7 @@ export const bool = false;
 
 const CreateNote = ({ route, navigation }) => {
     // receives id, title and content props for use in editing
-    const { title, content } = route.params;
+    const {id, title, content } = route.params;
 
     const [noteTitle, setTitleOnChange] = useState(title);
     const [noteContent, setNoteOnChange] = useState(content);
@@ -18,16 +18,21 @@ const CreateNote = ({ route, navigation }) => {
     const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes();
 
     const insertDataFunc = () => {
+      //sends the note title and content to the database
         database.insertNote( noteTitle, noteContent )
-}
+    }
 
-
+    const updateNoteContent = () => {
+        database.upDateNote( id, noteTitle, noteContent )
+        console.log('clicked')
+    }
 
 useEffect(() => {
         navigation.setOptions({
           headerRight: () => (
             <Button onPress={() => {
               insertDataFunc()
+              console.log(id)
             } } 
             title="save" />
           ),
@@ -51,6 +56,8 @@ useEffect(() => {
                     value = {noteContent} 
                     onChangeText = { text => setNoteOnChange( text) } 
                     />
+                    {/* //for testing */}
+        <Button title='update' onPress={() => updateNoteContent()} />
       </View>
     )
 };

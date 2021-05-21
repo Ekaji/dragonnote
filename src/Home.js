@@ -74,7 +74,7 @@ const loadDataAsync = async () => {
 
     const renderItem = ( {item} ) => {
         return(
-            <NotesInfo title={item.title} content={item.content} />
+            <NotesInfo title={item.title} content={item.content} id={item.id} />
         )
     };
 

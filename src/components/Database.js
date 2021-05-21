@@ -1,5 +1,6 @@
 import React from 'react'
 import * as SQLite from 'expo-sqlite'
+import { Alert } from 'react-native'
 
 //create a database instance
 const db = SQLite.openDatabase('db.db')
@@ -30,6 +31,21 @@ const setupDatabaseAsync = async () => {
             ) // end executeSQL
         }) // end transaction
       }
+    
+    const upDateNote = (id, title, content ) => {
+       db.transaction( tx => {
+         tx.executeSql('UPDATE notes SET title = ?, content = ? WHERE id = ?',
+         [title, content, id],
+         (tx , results) => {
+           if (results.rowsAffected > 0){
+             console.log('success')
+           } else {
+             console.log('failed to update')
+           }
+         }
+         )
+       }) 
+    }
 
 
 // create new notes
@@ -42,7 +58,6 @@ const insertNote = ( noteTitle, noteContent ) => {
         tx.executeSql( 'INSERT INTO notes (id, title, content ) values(?, ?, ?)', [id, noteTitle, noteContent] )
     },
         ( t, error ) => { console.log( 'error inserting into notes'); console.log( error ) },
-        //successFunc( ) refreshes the database after user has been inserted so change would be reflected
         ( t, success ) => { console.log('insertUser successfull') }
     )
 }
@@ -80,6 +95,7 @@ const insertNote = ( noteTitle, noteContent ) => {
 //    setupNoteAsync,
 //    dropDatabaseTable,
       setupDatabaseAsync,
+      upDateNote,
       insertNote,
       fetchData,
   }
