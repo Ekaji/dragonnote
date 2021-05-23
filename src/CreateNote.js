@@ -23,6 +23,7 @@ const CreateNote = ({ route, navigation }) => {
     }
 
     const updateNoteContent = () => {
+      // updates note title and content 
         database.upDateNote( id, noteTitle, noteContent )
         console.log('clicked')
     }
@@ -31,7 +32,8 @@ useEffect(() => {
         navigation.setOptions({
           headerRight: () => (
             <Button onPress={() => {
-              insertDataFunc()
+              // if an id is not present new content is pushed to the database else the data should be updated
+              id === undefined ?  insertDataFunc() : updateNoteContent() 
               console.log(id)
             } } 
             title="save" />
@@ -56,8 +58,6 @@ useEffect(() => {
                     value = {noteContent} 
                     onChangeText = { text => setNoteOnChange( text) } 
                     />
-                    {/* //for testing */}
-        <Button title='update' onPress={() => updateNoteContent()} />
       </View>
     )
 };
