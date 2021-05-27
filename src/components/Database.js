@@ -62,6 +62,20 @@ const insertNote = ( noteTitle, noteContent ) => {
     )
 }
 
+const deleteNote = (id) => {
+  db.transaction( (tx => {
+    tx.executeSql('DELETE FROM notes WHERE id=?',[id],
+    (tx, results) => {
+      console.log('results', results.rowsAffected);
+      if (results.rowsAffected > 0 ){
+        console.log('delete sucessfull')
+      } else {
+        console.log('delete unsucessfull')
+      }
+    })
+  }))
+}
+
 
 //comment out the below code in production
 //delete table
@@ -97,5 +111,6 @@ const insertNote = ( noteTitle, noteContent ) => {
       setupDatabaseAsync,
       upDateNote,
       insertNote,
+      deleteNote,
       fetchData,
   }

@@ -31,7 +31,7 @@ const NotesInfo = ({ id, title, content }) => {
 
     return(
         <TouchableOpacity onPress={() => navigation.navigate('Createnote', 
-                          {id: id, title: title, content: content}
+            {id: id, title: title, content: content}
         )}>
             <Notesview  >
                 <Text_Title>{ title }</Text_Title>
@@ -64,7 +64,7 @@ const loadDataAsync = async () => {
     useEffect(() => {
         //loads data when app starts the first time
         loadDataAsync();
-        //fetch data when screen comes into focus
+        //fetch data when the home screen comes into focus
         const reloadData = navigation.addListener('focus', () => {
             loadDataAsync();
         })
@@ -84,6 +84,7 @@ const loadDataAsync = async () => {
                 data={note._array}
                 renderItem = {renderItem}
                 keyExtractor = {item => item.id.toString()}
+                inverted={true}
             />
             <CreateNoteButton />
         </>

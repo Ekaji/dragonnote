@@ -39,7 +39,7 @@ useEffect(() => {
             title="save" />
           ),
         });
-      }, );
+      },);
 
     return (
      <View >
