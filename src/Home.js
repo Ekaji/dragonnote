@@ -2,7 +2,7 @@
 // @refresh reset
 import React from 'react';
 import { useState, useEffect, useLayoutEffect} from 'react';
-import { View , Text, FlatList, TouchableOpacity, Button} from 'react-native'
+import { ScrollView, View, Text, FlatList, TouchableOpacity, Button, StyleSheet} from 'react-native'
 import styled from 'styled-components/native';
 import CreateNoteButton from './CreateNoteButton';
 import { useNavigation } from '@react-navigation/native';
@@ -45,7 +45,6 @@ const NotesInfo = ({ id, title, content }) => {
 const Home = ({navigation}) => {
     const [ note, getNote ] = useState(notesData);
     console.log(note._array, 'testing' )
-// 
 
 const loadDataAsync = async () => {
     try{
@@ -79,15 +78,16 @@ const loadDataAsync = async () => {
     };
 
     return(
-        <>
-            <FlatList 
+         <>
+            <FlatList  
+                style= {{backgroundColor: "#f9c2ff", display: 'flex', flexDirection: 'column-reverse'}}
                 data={note._array}
                 renderItem = {renderItem}
                 keyExtractor = {item => item.id.toString()}
                 inverted={true}
             />
-            <CreateNoteButton />
-        </>
+          <CreateNoteButton /> 
+         </>
     )
 };
 

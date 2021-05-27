@@ -34,6 +34,8 @@ useEffect(() => {
             <Button onPress={() => {
               // if an id is not present new content is pushed to the database else the data should be updated
               id === undefined ?  insertDataFunc() : updateNoteContent() 
+              //for testing delete
+              // database.deleteNote(id)
               console.log(id)
             } } 
             title="save" />

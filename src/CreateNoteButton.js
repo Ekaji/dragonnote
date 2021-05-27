@@ -12,6 +12,7 @@ const CreateButton = () => {
 
     const CreateNoteButtonContainer = styled.View`
         position: absolute;
+        zIndex: 20;
         bottom: 50px;
         right: ${(windowWidth / 2) -50} ;
         left: ${(windowWidth / 2) -50} ;
