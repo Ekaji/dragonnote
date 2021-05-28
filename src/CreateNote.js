@@ -28,15 +28,17 @@ const CreateNote = ({ route, navigation }) => {
         console.log('clicked')
     }
 
+    const deleteNote = () => {
+      //for delete
+      database.deleteNote(id)
+    }
+
 useEffect(() => {
         navigation.setOptions({
           headerRight: () => (
             <Button onPress={() => {
               // if an id is not present new content is pushed to the database else the data should be updated
               id === undefined ?  insertDataFunc() : updateNoteContent() 
-              //for testing delete
-              // database.deleteNote(id)
-              console.log(id)
             } } 
             title="save" />
           ),

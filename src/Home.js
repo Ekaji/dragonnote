@@ -4,6 +4,7 @@ import React from 'react';
 import { useState, useEffect, useLayoutEffect} from 'react';
 import { ScrollView, View, Text, FlatList, TouchableOpacity, Button, StyleSheet} from 'react-native'
 import styled from 'styled-components/native';
+import CheckBox from '@react-native-community/checkbox';
 import CreateNoteButton from './CreateNoteButton';
 import { useNavigation } from '@react-navigation/native';
 
@@ -20,6 +21,8 @@ const notesData = [
 //discribes how the rendered item should look
 const NotesInfo = ({ id, title, content }) => {
     const navigation = useNavigation();
+    const [toggleCheckBox, setToggleCheckBox] = useState(false)
+    const [IDs, setIds] = useState([])
 
     const Notesview = styled.View`
         margin: 20px;
@@ -29,14 +32,33 @@ const NotesInfo = ({ id, title, content }) => {
         margin-bottom: 8px;
     `;
 
+
+    const handleCheckBox = (id) => {
+        setToggleCheckBox(!toggleCheckBox)
+        setIds((IDs, id) => [...IDs, id])
+        console.log( id, IDs )
+    }
+
+
     return(
-        <TouchableOpacity onPress={() => navigation.navigate('Createnote', 
+        <TouchableOpacity  onPress={() => navigation.navigate('Createnote', 
             {id: id, title: title, content: content}
         )}>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
             <Notesview  >
                 <Text_Title>{ title }</Text_Title>
                 <Text>{ content }</Text>
             </Notesview>
+            <CheckBox
+                style={{marginRight: 20}}
+                disabled={false}
+                value={toggleCheckBox}
+                onValueChange={() => {
+                     handleCheckBox(id)
+                } }
+            />
+            </View>
+            
         </TouchableOpacity>
     )  
 }
@@ -80,7 +102,7 @@ const loadDataAsync = async () => {
     return(
          <>
             <FlatList  
-                style= {{backgroundColor: "#f9c2ff", display: 'flex', flexDirection: 'column-reverse'}}
+                // style= {{ display: 'flex', flexDirection: 'column-reverse'}}
                 data={note._array}
                 renderItem = {renderItem}
                 keyExtractor = {item => item.id.toString()}
