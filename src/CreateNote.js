@@ -37,6 +37,7 @@ useEffect(() => {
         navigation.setOptions({
           headerRight: () => (
             <Button onPress={() => {
+              navigation.navigate('Home')
               // if an id is not present new content is pushed to the database else the data should be updated
               id === undefined ?  insertDataFunc() : updateNoteContent() 
             } } 

@@ -7,23 +7,19 @@ import styled from 'styled-components/native';
 import CheckBox from '@react-native-community/checkbox';
 import CreateNoteButton from './CreateNoteButton';
 import { useNavigation } from '@react-navigation/native';
+import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
 
 import { database } from './components/Database';
-
-const notesData = [
-    {
-    id: 1,
-    title: 'the rose that grew from concret',
-    content: "Did you hear about the rose that grew from a crack in the concrete? Proving natures law is wrong it learned to walk with out having feet. Funny it seems, but by keeping its dreams, it learned to breathe fresh air. Long live the rose that grew from concrete when no one else ever cared.",
-    }
-];
 
 //discribes how the rendered item should look
 const NotesInfo = ({ id, title, content }) => {
     const navigation = useNavigation();
     const [toggleCheckBox, setToggleCheckBox] = useState(false)
-    const [IDs, setIds] = useState([])
+    const [showheckboixes, setShowCheckBoxes] = useState(false)
 
+    const [currentCheckBox, setCurrentCheckBox] = useState('')
+    const [checkBoxIds, setCheckBoxIds] = useState([])
+    
     const Notesview = styled.View`
         margin: 20px;
     `;
@@ -31,41 +27,59 @@ const NotesInfo = ({ id, title, content }) => {
         font-size: 20px;
         margin-bottom: 8px;
     `;
+    
+        const onLongPress = (event) => {
+            if (event.nativeEvent.state === State.ACTIVE) {
+              console.log("I've been pressed for 800 milliseconds");
+              setShowCheckBoxes(!showheckboixes)
+            }
+          };
 
+        const getChecked = (ID) => {
+            setCurrentCheckBox(ID);
+            setCheckBoxIds([...checkBoxIds, currentCheckBox])
+        }
 
-    const handleCheckBox = (id) => {
-        setToggleCheckBox(!toggleCheckBox)
-        setIds((IDs, id) => [...IDs, id])
-        console.log( id, IDs )
-    }
+        // useEffect(() => {
+        //     setCheckBoxIds([...checkBoxIds, currentCheckBox])
+        //     console.log('checkBoxIds',checkBoxIds)
+        // },)
 
 
     return(
         <TouchableOpacity  onPress={() => navigation.navigate('Createnote', 
             {id: id, title: title, content: content}
         )}>
+             <LongPressGestureHandler
+            onHandlerStateChange={onLongPress}
+            minDurationMs={800}
+        >
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
             <Notesview  >
                 <Text_Title>{ title }</Text_Title>
                 <Text>{ content }</Text>
             </Notesview>
-            <CheckBox
-                style={{marginRight: 20}}
+            {showheckboixes === !true? <CheckBox
                 disabled={false}
                 value={toggleCheckBox}
-                onValueChange={() => {
-                     handleCheckBox(id)
-                } }
-            />
+                onValueChange={() => { 
+                    getChecked(id)
+                    setToggleCheckBox(!toggleCheckBox)
+                    toggleCheckBox === !true? database.deleteNote(id) : null    
+                }
+            }
+            /> : null
+        } 
             </View>
-            
+            </LongPressGestureHandler>
+        
         </TouchableOpacity>
     )  
 }
 
 
 const Home = ({navigation}) => {
-    const [ note, getNote ] = useState(notesData);
+    const [ note, getNote ] = useState([]);
     console.log(note._array, 'testing' )
 
 const loadDataAsync = async () => {
@@ -102,7 +116,7 @@ const loadDataAsync = async () => {
     return(
          <>
             <FlatList  
-                // style= {{ display: 'flex', flexDirection: 'column-reverse'}}
+                style= {{ display: 'flex', flexDirection: 'column-reverse'}}
                 data={note._array}
                 renderItem = {renderItem}
                 keyExtractor = {item => item.id.toString()}
