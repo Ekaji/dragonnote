@@ -1,6 +1,5 @@
 import React from 'react'
 import * as SQLite from 'expo-sqlite'
-import { Alert } from 'react-native'
 
 //create a database instance
 const db = SQLite.openDatabase('db.db')

@@ -1,15 +1,16 @@
 // force the state to clear with fast refresh in Expo
 // @refresh reset
 import React from 'react';
-import { useState, useEffect, useLayoutEffect, useContext} from 'react';
-import { ScrollView, View, Text, FlatList, TouchableOpacity, Button, StyleSheet} from 'react-native'
+import { Icon } from 'react-native-elements'
 import styled from 'styled-components/native';
-import CheckBox from '@react-native-community/checkbox';
 import CreateNoteButton from './CreateNoteButton';
-import { useNavigation } from '@react-navigation/native';
-import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
 
-import { CheckboxContext } from './context/CheckBoxContext'
+import { useState, useEffect, useContext} from 'react';
+import CheckBox from '@react-native-community/checkbox';
+import { useNavigation } from '@react-navigation/native';
+import { TrashOrMenuContext } from './context/TrashOrMenuContext';
+import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 
 import { database } from './components/Database';
 
@@ -19,20 +20,21 @@ const NotesInfo = ({ id, title, content, loadDataAsync}) => {
     //checkbox toggle
     const [toggleCheckBox, setToggleCheckBox] = useState(false)
     //applies css styling to either show or hide checkbox
-    const [checkBoxDisplay, setCheckBoxDisplay] = useContext(CheckboxContext)
+    const [trashOrMenuDisplay, setTrashOrMenuDisplay] = useContext(TrashOrMenuContext)
 
-    const [checkBoxIDs, getCheckBoxIDs] = useState([])
+    const [noteid, getNoteid] = useState('h')
 
     const onLongPress = (event) => {
         if (event.nativeEvent.state === State.ACTIVE) {
-        setCheckBoxDisplay(checkBoxDisplay === styles.hideBox ? styles.showBox : styles.hideBox)
+            setTrashOrMenuDisplay(!trashOrMenuDisplay)
         console.log("I've been pressed for 800 milliseconds");
         }
     };
 
+    
 
     return(
-        <TouchableOpacity  onPress={() => navigation.navigate('Createnote', 
+        <TouchableOpacity style={{borderWidth: 1, borderColor: '#517fa4', margin: 10, borderRadius: 6}}  onPress={() => navigation.navigate('Createnote', 
             {id: id, title: title, content: content}
         )}>
             <LongPressGestureHandler
@@ -45,22 +47,24 @@ const NotesInfo = ({ id, title, content, loadDataAsync}) => {
                 <Text>{ content }</Text>
             </Notesview>
 
-            <CheckBox
-                style={checkBoxDisplay}
-                disabled={false}
-                value={toggleCheckBox}
-                tintColors = {{ true: '#FF6900' , false: '#d4d4d4' }}
-                onChange={() => {
-                    setToggleCheckBox(!toggleCheckBox);
-                    getCheckBoxIDs([...checkBoxIDs, id])
-                    console.log('IDS',checkBoxIDs)
-                    // togggleCheckboxFunc()
-                    // toggleCheckBox === !true ? database.deleteNote(id) : null
-                    //reload after delete
-                    loadDataAsync();    
-                }
+            {trashOrMenuDisplay ?
+            <View style={{marginTop: 'auto', marginBottom: 'auto', marginRight: 10}}> 
+                <Icon  name='trash' type='font-awesome' color='#517fa4' raised
+                    onPress={ () => { 
+                        database.deleteNote(id);       
+                        loadDataAsync();
+                    }
+                    } />
+            </View>
+                
+                :
+            <View style={{marginTop: 'auto', marginBottom: 'auto', marginRight: 10}}> 
+                <Icon name='ellipsis-v' type='font-awesome' color='#517fa4' />
+            </View>
+            
             }
-            />
+            
+
             </View>
             </LongPressGestureHandler>
         </TouchableOpacity>
@@ -71,8 +75,7 @@ const NotesInfo = ({ id, title, content, loadDataAsync}) => {
 const Home = ({navigation}) => {
     const [ note, getNote ] = useState([]);
     //passed as value to context
-    const [checkBoxDisplay, setCheckBoxDisplay] = useState(styles.hideBox)
-    console.log(note._array, 'testing' )
+    const [trashOrMenuDisplay, setTrashOrMenuDisplay] = useState(false)
 
 const loadDataAsync = async () => {
     try{
@@ -107,7 +110,7 @@ const loadDataAsync = async () => {
     };
 
     return(
-         <CheckboxContext.Provider value={[checkBoxDisplay, setCheckBoxDisplay]}>
+         <TrashOrMenuContext.Provider value={[trashOrMenuDisplay, setTrashOrMenuDisplay]}>
             <FlatList  
                 style= {{ display: 'flex', flexDirection: 'column-reverse'}}
                 data={note._array}
@@ -116,13 +119,13 @@ const loadDataAsync = async () => {
                 inverted={true}
             />
           <CreateNoteButton /> 
-         </CheckboxContext.Provider>
+         </TrashOrMenuContext.Provider>
     )
 };
 
 const Notesview = styled.View`
-margin: 20px;
-width: 70%;
+margin: 10px;
+width: 60%;
 `;
 const Text_Title = styled.Text`
 font-size: 20px;

@@ -5,7 +5,7 @@ import { View, StyleSheet, Text, TextInput, Button} from 'react-native';
 
 import { database } from './components/Database'
 
-export const bool = false;
+// export const bool = false;
 
 const CreateNote = ({ route, navigation }) => {
     // receives id, title and content props for use in editing
@@ -25,7 +25,6 @@ const CreateNote = ({ route, navigation }) => {
     const updateNoteContent = () => {
       // updates note title and content 
         database.upDateNote( id, noteTitle, noteContent )
-        console.log('clicked')
     }
 
     const deleteNote = () => {
