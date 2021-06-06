@@ -3,6 +3,8 @@ import styled from 'styled-components/native';
 import { Button, View, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+import {CreateNoteButton} from './createNoteButton.styles'
+
 
 const CreateButton = () => {
     // useNavigation is a hook which gives access to the navigation object https://reactnavigation.org/docs/connecting-navigation-prop
@@ -13,22 +15,16 @@ const CreateButton = () => {
     const CreateNoteButtonContainer = styled.View`
         position: absolute;
         zIndex: 20;
-        bottom: 50px;
+        bottom: 10px;
         right: ${(windowWidth / 2) -50} ;
         left: ${(windowWidth / 2) -50} ;
         margin: 0px auto;
-    `;
-
-    const CreateNoteButton = styled.Button`
-        background-color: aqua;
-        font-size : 200px;
-        padding: 90px;
     `;
  
     return(
         // button component for navigation
         <CreateNoteButtonContainer > 
-            <CreateNoteButton title= '+' color="#f194ff" name='button' onPress={() => navigation.navigate('Createnote', { title: '', content: ''} )} />
+            <CreateNoteButton title= '+' color="#f194ff" name='button' onPress={() => navigation.navigate('Createnote', {  title: '', content: ''} )} />
         </CreateNoteButtonContainer>
     )
 }

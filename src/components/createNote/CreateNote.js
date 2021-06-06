@@ -2,29 +2,40 @@ import React from 'react';
 import { useState, useEffect, createContext, useLayoutEffect } from 'react';
 import styled from 'styled-components/native';
 import { View, StyleSheet, Text, TextInput, Button} from 'react-native';
+import { createNote } from './createNote.styles'
 
-import { database } from './components/Database'
+import { database } from '../database/Database'
 
 // export const bool = false;
 
 const CreateNote = ({ route, navigation }) => {
+    const date = new Date();
+    const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes();
+    
     // receives id, title and content props for use in editing
-    const {id, title, content } = route.params;
+    // let {id, title, content, color } = route.params; 
+
+    console.log(route)
+    
+    let id = route.params.id === undefined? creationDate : route.params.id
+    let title = route.params.title === undefined? '' : route.params.title
+    let content = route.params.content === undefined? '' : route.params.content
+    let color = route.params.color === undefined? '' : route.params.color
 
     const [noteTitle, setTitleOnChange] = useState(title);
     const [noteContent, setNoteOnChange] = useState(content);
 
-    const date = new Date();
-    const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes();
+
+
 
     const insertDataFunc = () => {
       //sends the note title and content to the database
-        database.insertNote( noteTitle, noteContent )
+        database.insertNote( noteTitle, noteContent, color)
     }
 
     const updateNoteContent = () => {
       // updates note title and content 
-        database.upDateNote( id, noteTitle, noteContent )
+        database.upDateNote( id, noteTitle, noteContent, color)
     }
 
     const deleteNote = () => {
@@ -47,8 +58,8 @@ useEffect(() => {
 
     return (
      <View >
-      <Text style= {styles.timearea}>{  creationDate  }</Text>
-        <TextInput  style={styles.textInputTitle}
+      <Text style= {createNote.timearea}>{  creationDate  }</Text>
+        <TextInput  style={createNote.textInputTitle}
                     multiline={true}
                     maxLength={50}
                     placeholder = 'title' 
@@ -56,7 +67,7 @@ useEffect(() => {
                     onChangeText = { text => setTitleOnChange( text ) } 
                     />
 
-        <TextInput  style={styles.textInputNote}
+        <TextInput  style={createNote.textInputNote}
                     multiline={true}
                     placeholder = 'write something' 
                     value = {noteContent} 
@@ -66,24 +77,5 @@ useEffect(() => {
     )
 };
 
-//not using styled components because of a bug where the keyboard disapears with every keystroke
-const styles = StyleSheet.create({
-    textInputTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        height: 32,
-        margin: 12,
-        },
-
-    textInputNote: {
-        fontSize: 20,
-        margin: 12,
-        },
-
-    timearea: {
-        margin: 12,
-        }
-    },
-);
 
 export default CreateNote;

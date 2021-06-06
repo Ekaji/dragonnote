@@ -9,7 +9,7 @@ const setupDatabaseAsync = async () => {
     return new Promise( ( resolve, reject ) => {
         db.transaction( tx => {
             tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS notes (id TEXT, title TEXT, content TEXT)'
+                'CREATE TABLE IF NOT EXISTS notes (id TEXT, title TEXT, content TEXT, color TEXT)'
             );
         },
         ( _, error ) => { console.log( 'db error creating TABLES' ); console.log( error ); reject( error ) },
@@ -31,30 +31,48 @@ const setupDatabaseAsync = async () => {
         }) // end transaction
       }
     
-    const upDateNote = (id, title, content ) => {
-       db.transaction( tx => {
-         tx.executeSql('UPDATE notes SET title = ?, content = ? WHERE id = ?',
-         [title, content, id],
-         (tx , results) => {
-           if (results.rowsAffected > 0){
-             console.log('success')
-           } else {
-             console.log('failed to update')
-           }
-         }
-         )
-       }) 
-    }
+      const upDateNote = (id, title, content, color ) => {
+        db.transaction( tx => {
+          tx.executeSql('UPDATE notes SET title = ?, content = ?, color =? WHERE id = ?',
+          [title, content, color, id],
+          (tx , results) => {
+            if (results.rowsAffected > 0){
+              console.log('success')
+            } else {
+              console.log('failed to update')
+            }
+          }
+          )
+        }) 
+     }  
+
+     const upDateNoteColor = (id, color ) => {
+      db.transaction( tx => {
+        tx.executeSql('UPDATE notes SET color =? WHERE id = ?',
+        [color, id],
+        (tx , results) => {
+          if (results.rowsAffected > 0){
+            console.log('success')
+          } else {
+            console.log('failed to update')
+          }
+        }
+        )
+      }) 
+   }
 
 
 // create new notes
 const insertNote = ( noteTitle, noteContent ) => { 
-  // if (title || content === null) { return }
+
+  // if (noteColor === undefined) { noteColor = '#517fa4' }
+  const noteColor = '#517fa4'
+  console.log(noteColor)
   const date = new Date();
   const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
   const id = creationDate.toString()
     db.transaction( tx => { 
-        tx.executeSql( 'INSERT INTO notes (id, title, content ) values(?, ?, ?)', [id, noteTitle, noteContent] )
+        tx.executeSql( 'INSERT INTO notes (id, title, content, color ) values(?, ?, ?, ?)', [id, noteTitle, noteContent, noteColor] )
     },
         ( t, error ) => { console.log( 'error inserting into notes'); console.log( error ) },
         ( t, success ) => { console.log('insertUser successfull') }
@@ -77,7 +95,7 @@ const deleteNote = (id) => {
 
 
 //comment out the below code in production
-//delete table
+// delete table
 // const dropDatabaseTable = async () => {
 //     return new Promise( ( resolve, reject) => {
 //         db.transaction( tx => { 
@@ -106,8 +124,9 @@ const deleteNote = (id) => {
 
   export const database = {
 //    setupNoteAsync,
-//    dropDatabaseTable,
+  //  dropDatabaseTable,
       setupDatabaseAsync,
+      upDateNoteColor,
       upDateNote,
       insertNote,
       deleteNote,
