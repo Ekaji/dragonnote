@@ -63,10 +63,9 @@ const setupDatabaseAsync = async () => {
 
 
 // create new notes
-const insertNote = ( noteTitle, noteContent ) => { 
+const insertNote = ( noteTitle, noteContent, color) => { 
 
-  // if (noteColor === undefined) { noteColor = '#517fa4' }
-  const noteColor = '#517fa4'
+  const noteColor = color
   console.log(noteColor)
   const date = new Date();
   const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();

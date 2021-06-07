@@ -14,6 +14,7 @@ import { Text, FlatList, Button, TouchableWithoutFeedback } from 'react-native';
 import { database } from '../database/Database';
 import { TouchableOpacityComp, NotesviewContainer, ColorButtonsComp, TrashComponent, EllipsisMenu, Notesview, Text_Title } from './home.styles'
 
+import  ButtonColorComp  from '../coloredButton/ColoredButton'
 
 //discribes how the rendered item should look
 const NotesInfo = ({ id, title, content, color, loadDataAsync }) => {
@@ -54,24 +55,7 @@ const NotesInfo = ({ id, title, content, color, loadDataAsync }) => {
                     }
                     } />
             </TrashComponent>
-                :
-            <EllipsisMenu > 
-                <Icon name='ellipsis-v' type='font-awesome' color='#fff'
-                onPress={ () => { 
-                    loadDataAsync();
-                    setColorMenu(!colorMenu)
-                }
-            }/>
-            {colorMenu ? 
-                <ColorButtonsComp >
-                    <Button style={{marginHorizontal: 4}} color='#F59EAE' title='p' onPress={() => { database.upDateNoteColor(id, '#03fcdb'); loadDataAsync();}} />
-                    <Button style={{marginHorizontal: 4}} color='#80B7A2' title='b' onPress={() => { database.upDateNoteColor(id, '#80B7A2'); loadDataAsync();} } />
-                    <Button style={{marginHorizontal: 4}} color='#FDDCA5' title='b' onPress={() => { database.upDateNoteColor(id, '#FDDCA5' ); loadDataAsync();} } />
-                    <Button style={{marginHorizontal: 4}} color='#34a3a3' title='b' onPress={() => { database.upDateNoteColor(id, '#34a3a3' ); loadDataAsync();} } />
-                </ColorButtonsComp>  
-                : null 
-            }  
-            </EllipsisMenu>
+                : null
             }
             
             </NotesviewContainer>
@@ -118,52 +102,56 @@ const Home = ({navigation}) => {
     };
 
 
-    const [rawDATA, setDATA] = useState([])
+    const [rawDATA, setRawDATA] = useState([])
     //reverse data so last entry appears first
     useEffect(() => {
         const reverseData = () => {
             if (note._array === undefined){
-                setDATA([])
+                setRawDATA([])
             } else {
-                setDATA(note._array.reverse())
+                setRawDATA(note._array.reverse())
             }
         } 
         reverseData()
     },[note])
 
     const [filteredData, setFilteredData] = useState(rawDATA)
-    // search funcnction
-    const filterResult = (word) => {
-        let oldData = rawDATA.map( rawdata => {
-            return {id: rawdata.id, title: rawdata.title.toLowerCase(), content: rawdata.content.toLowerCase(), color: rawdata.color}
-        });
-       if(word !== null){
-           let result = oldData.filter(data => {
-            console.log(word)
-               return data.content.includes(word.toLowerCase()) || data.title.includes(word.toLowerCase())
-           })
-           setFilteredData(result)
-       } else if (word === '') {
-      return setFilteredData((rawDATA) => rawDATA)
-     }}
+    // search function
+    // const filterResult = (word) => {
+    //     let oldData = rawDATA.map( rawdata => {
+    //         return {id: rawdata.id, title: rawdata.title.toLowerCase(), content: rawdata.content.toLowerCase(), color: rawdata.color}
+    //     });
+    //    if(word !== ''){
+    //        let result = oldData.filter(data => {
+    //         console.log(word)
+    //            return data.content.includes(word.toLowerCase()) || data.title.includes(word.toLowerCase())
+    //        })
+    //        setFilteredData(result)
+    //    } else  { 
+    //        setFilteredData( rawDATA)
+    //  }}
 
-     useEffect(() => {
-         filterResult('')
-     },[note])
+    
  
      //data passed to flatlist
-    const DATA = filteredData ? filteredData : rawDATA
+    //  const [DATA, setDATA] = useState(rawDATA)
+
+    //  useEffect(() => {
+    //      setDATA(filteredData ? filteredData : rawDATA )
+    //  })
+    
 
     return(
         <TrashOrMenuContext.Provider value={[trashOrMenuDisplay, setTrashOrMenuDisplay]}>
-            <Search filterResult={filterResult} />
+            {/* <Search filterResult={filterResult} /> */}
             <TouchableWithoutFeedback onPress={() => console.log( 'pressed')}>
             <FlatList  
-                data={ DATA }
+                data={ rawDATA }
                 renderItem = {renderItem}
                 keyExtractor = {item => item.id.toString()}
             />
           </TouchableWithoutFeedback>
+          <ButtonColorComp />
           <CreateNoteButton />
         </TrashOrMenuContext.Provider>
     )

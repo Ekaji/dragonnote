@@ -13,19 +13,11 @@ const CreateNote = ({ route, navigation }) => {
     const creationDate = date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes();
     
     // receives id, title and content props for use in editing
-    // let {id, title, content, color } = route.params; 
+    let {id, title, content, color } = route.params; 
 
-    console.log(route)
-    
-    let id = route.params.id === undefined? creationDate : route.params.id
-    let title = route.params.title === undefined? '' : route.params.title
-    let content = route.params.content === undefined? '' : route.params.content
-    let color = route.params.color === undefined? '' : route.params.color
 
     const [noteTitle, setTitleOnChange] = useState(title);
     const [noteContent, setNoteOnChange] = useState(content);
-
-
 
 
     const insertDataFunc = () => {

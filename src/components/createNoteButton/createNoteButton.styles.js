@@ -1,11 +1,11 @@
-import styled from 'styled-components/native';
+// import styled from 'styled-components/native';
 
 
-const CreateNoteButton = styled.Button`
-        background-color: aqua;
-        font-size : 200px;
-        padding: 90px;
-        `;
+// const CreateNoteButton = styled.Button`
+//         background-color: aqua;
+//         font-size : 200px;
+//         padding: 90px;
+//         `;
 
 
-export { CreateNoteButton}
+// export { CreateNoteButton}
