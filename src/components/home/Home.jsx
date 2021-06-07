@@ -1,73 +1,23 @@
 // force the state to clear with fast refresh in Expo
 // @refresh reset
 import React from 'react';
-import { Icon } from 'react-native-elements'
-import CreateNoteButton from '../createNoteButton/CreateNoteButton';
+import Notes from '../notes/Notes'
 import Search from '../search/Search'
-
-import { useState, useEffect, useContext} from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { TrashOrMenuContext } from '../../context/TrashOrMenuContext';
-import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
-import { Text, FlatList, Button, TouchableWithoutFeedback } from 'react-native';
-
+import { useState, useEffect } from 'react';
 import { database } from '../database/Database';
-import { TouchableOpacityComp, NotesviewContainer, ColorButtonsComp, TrashComponent, EllipsisMenu, Notesview, Text_Title } from './home.styles'
-
 import  ButtonColorComp  from '../coloredButton/ColoredButton'
+import { FlatList, TouchableWithoutFeedback } from 'react-native';
+import CreateNoteButton from '../createNoteButton/CreateNoteButton';
+import { TrashOrMenuContext } from '../../context/TrashOrMenuContext';
 
-//discribes how the rendered item should look
-const NotesInfo = ({ id, title, content, color, loadDataAsync }) => {
-    const navigation = useNavigation();
-    //applies css styling to either show or hide checkbox
-    const [trashOrMenuDisplay, setTrashOrMenuDisplay] = useContext(TrashOrMenuContext);
 
-    const [colorMenu, setColorMenu] = useState(false)
- 
-
-    const onLongPress = (event) => {
-        if (event.nativeEvent.state === State.ACTIVE) {
-            setTrashOrMenuDisplay(!trashOrMenuDisplay)
-        console.log("I've been pressed for 800 milliseconds");
-        }
-    };
-
-    return(
-        <TouchableOpacityComp color={color}  onPress={() => navigation.navigate('Createnote', 
-            {id: id, title: title, content: content, color: color}
-        )}>
-            <LongPressGestureHandler
-            onHandlerStateChange={onLongPress}
-            minDurationMs={800}
-        >
-            <NotesviewContainer >
-            <Notesview  >
-                <Text_Title>{ title }</Text_Title>
-                <Text>{ content }</Text>
-            </Notesview>
-
-            {trashOrMenuDisplay ?
-            <TrashComponent> 
-                <Icon  name='trash' type='font-awesome' color={`${color}`} raised
-                    onPress={ () => { 
-                        database.deleteNote(id);       
-                        loadDataAsync();
-                    }
-                    } />
-            </TrashComponent>
-                : null
-            }
-            
-            </NotesviewContainer>
-            </LongPressGestureHandler>
-        </TouchableOpacityComp>
-    )  
-}
-
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
     const [ note, getNote ] = useState([]);
     //passed as value to context
     const [trashOrMenuDisplay, setTrashOrMenuDisplay] = useState(false)
+    // passed to CreateNoteButton
+    const [showColoredButton, setShowColoredButton] = useState(false)
+    const [hideCreateButton, setHideCreateButton] = useState(false)
 
 
     const loadDataAsync = async () => {
@@ -83,6 +33,11 @@ const Home = ({navigation}) => {
     }
 
     useEffect(() => {
+        //loads data when app starts the first time
+        loadDataAsync();
+   },[])
+
+    useEffect(() => {
         //fetch data when the home screen comes into focus
         const reloadData = navigation.addListener('focus', () => {
             loadDataAsync();
@@ -90,14 +45,18 @@ const Home = ({navigation}) => {
             return reloadData
     })
 
-    useEffect(() => {
-        //loads data when app starts the first time
-        loadDataAsync();
-   },[])
 
     const renderItem = ( {item} ) => {
         return(
-            <NotesInfo title={item.title} content={item.content} id={item.id} color={item.color} loadDataAsync={loadDataAsync} />
+            <Notes 
+                id={item.id}
+                color={item.color}
+                title={item.title}
+                content={item.content}
+                loadDataAsync={loadDataAsync}
+                hideCreateButton={hideCreateButton}
+                setHideCreateButton={setHideCreateButton}
+                />
         )
     };
 
@@ -151,8 +110,11 @@ const Home = ({navigation}) => {
                 keyExtractor = {item => item.id.toString()}
             />
           </TouchableWithoutFeedback>
-          <ButtonColorComp />
-          <CreateNoteButton />
+          {showColoredButton ? <ButtonColorComp /> : null}
+          {hideCreateButton ?  null :
+          <CreateNoteButton  showColoredButton={showColoredButton} setShowColoredButton={setShowColoredButton} />
+          
+        }
         </TrashOrMenuContext.Provider>
     )
 };

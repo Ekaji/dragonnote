@@ -1,11 +1,12 @@
-// import styled from 'styled-components/native';
+import styled from 'styled-components/native';
 
 
-// const CreateNoteButton = styled.Button`
-//         background-color: aqua;
-//         font-size : 200px;
-//         padding: 90px;
-//         `;
+const CreateNoteButtonContainer = styled.View`
+position: absolute;
+zIndex: 20;
+bottom: 80px;
+right: 60px;
+margin: 0px auto;
+`;
 
-
-// export { CreateNoteButton}
+export {CreateNoteButtonContainer};

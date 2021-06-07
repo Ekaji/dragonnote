@@ -15,10 +15,8 @@ const CreateNote = ({ route, navigation }) => {
     // receives id, title and content props for use in editing
     let {id, title, content, color } = route.params; 
 
-
     const [noteTitle, setTitleOnChange] = useState(title);
     const [noteContent, setNoteOnChange] = useState(content);
-
 
     const insertDataFunc = () => {
       //sends the note title and content to the database
@@ -30,16 +28,12 @@ const CreateNote = ({ route, navigation }) => {
         database.upDateNote( id, noteTitle, noteContent, color)
     }
 
-    const deleteNote = () => {
-      //for delete
-      database.deleteNote(id)
-    }
 
-useEffect(() => {
-        navigation.setOptions({
-          headerRight: () => (
-            <Button onPress={() => {
-              navigation.navigate('Home')
+    useEffect(() => {
+      navigation.setOptions({
+        headerRight: () => (
+          <Button onPress={() => {
+            navigation.navigate('Home')
               // if an id is not present new content is pushed to the database else the data should be updated
               id === undefined ?  insertDataFunc() : updateNoteContent() 
             } } 
