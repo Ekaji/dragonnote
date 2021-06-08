@@ -1,6 +1,8 @@
 import React from 'react'
 import { useContext} from 'react';
 import { Text } from 'react-native';
+import { Icon } from 'react-native-elements'
+import { database } from '../database/Database'
 import { useNavigation } from '@react-navigation/native';
 import { TrashOrMenuContext } from '../../context/TrashOrMenuContext';
 import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
@@ -23,7 +25,7 @@ const Notes = ({ id, title, content, color, loadDataAsync, hideCreateButton, set
     };
 
     return(
-        <TouchableOpacityComp color={color}  onPress={() => navigation.navigate('Createnote', 
+        <TouchableOpacityComp color={color} onPress={() => navigation.navigate('Createnote', 
             {id: id, title: title, content: content, color: color}
         )}>
             <LongPressGestureHandler
@@ -38,7 +40,7 @@ const Notes = ({ id, title, content, color, loadDataAsync, hideCreateButton, set
 
             {trashOrMenuDisplay ?
             <TrashComponent> 
-                <Icon  name='trash' type='font-awesome' color={`${color}`} raised
+                <Icon  name='trash' type='font-awesome' color={color} raised
                     onPress={ () => { 
                         database.deleteNote(id);       
                         loadDataAsync();

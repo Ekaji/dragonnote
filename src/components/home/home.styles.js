@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 const TouchableOpacityComp = styled.TouchableOpacity`
         border-width: 1px;
-        border-color: ${props => props.color};
+        border-color: ${props => props.color}; 
         background-color: ${props => props.color};
         margin: 10px;
         border-radius: 6px;
