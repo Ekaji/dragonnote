@@ -1,7 +1,7 @@
 import React from 'react';
-import { useState, useEffect, createContext, useLayoutEffect } from 'react';
-import styled from 'styled-components/native';
-import { View, StyleSheet, Text, TextInput, Button} from 'react-native';
+import { useState, useEffect } from 'react';
+import { Icon, Button } from 'react-native-elements'
+import { View, StyleSheet, Text, TextInput} from 'react-native';
 import { createNote } from './createNote.styles'
 
 import { database } from '../database/Database'
@@ -31,20 +31,70 @@ const CreateNote = ({ route, navigation }) => {
 
     useEffect(() => {
       navigation.setOptions({
+        // headerStyle: {
+        //   backgroundColor: color,
+        // },
         headerRight: () => (
-          <Button onPress={() => {
-            navigation.navigate('Home')
-              // if an id is not present new content is pushed to the database else the data should be updated
-              id === undefined ?  insertDataFunc() : updateNoteContent() 
-            } } 
-            title="save" />
+          <View  style={{marginRight: 20, borderRadius: 100}}>
+              <Icon
+                name="check"
+                size={25}
+                color={color}
+                type='font-awesome'
+                onPress={() => {
+                          navigation.navigate('Home')
+                            // if an id is not present new content is pushed to the database else the data should be updated
+                            id === undefined ?  insertDataFunc() : updateNoteContent() 
+                          } } 
+           />
+           </View>
           ),
         });
       },);
 
+
+
+    // useEffect(() => {
+    //   navigation.setOptions({
+    //     // headerStyle: {
+    //     //   backgroundColor: color,
+    //     // },
+    //     headerRight: () => (
+    //       // <View  style={{marginRight: 15, borderRadius: 100}}>
+    //       <Button  onPress={() => {
+    //         navigation.navigate('Home')
+    //           // if an id is not present new content is pushed to the database else the data should be updated
+    //           id === undefined ?  insertDataFunc() : updateNoteContent() 
+    //         } } 
+    //         icon={
+
+    //           // onPress={() => {
+    //           //   navigation.navigate('Home')
+    //           //     // if an id is not present new content is pushed to the database else the data should be updated
+    //           //     id === undefined ?  insertDataFunc() : updateNoteContent() 
+    //           //   } } 
+
+
+    //           <Icon
+    //           reverse
+    //             name="check"
+    //             size={25}
+    //             color={color}
+    //             type='font-awesome'
+    //           />
+    //         }
+          
+    //         // title="save" 
+
+    //         />
+    //       // </View>
+    //       ),
+    //     });
+    //   },);
+
     return (
-     <View >
-      <Text style= {createNote.timearea}>{  creationDate  }</Text>
+     <View  style={{flex: 1, backgroundColor: color, }}>
+      <Text style= {createNote.timearea} >{  id || creationDate  }</Text>
         <TextInput  style={createNote.textInputTitle}
                     multiline={true}
                     maxLength={50}

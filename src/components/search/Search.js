@@ -20,6 +20,7 @@ const Search = ({filterResult}) => {
         round={true}
         lightTheme={true}
         value={search}
+        containerStyle={{backgroundColor: '#fff', borderBottomColor: '#fff', borderTopColor: '#fff'}}
       />
     )
 }

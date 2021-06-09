@@ -6,7 +6,7 @@ import { database } from '../database/Database'
 import { useNavigation } from '@react-navigation/native';
 import { TrashOrMenuContext } from '../../context/TrashOrMenuContext';
 import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
-import { TouchableOpacityComp, NotesviewContainer, TrashComponent, Notesview, Text_Title } from '../home/home.styles'
+import { TouchableOpacityComp, NotesviewContainer, TrashComponent, Notesview, Text_Title } from './note.styles'
 
 
 //discribes how the rendered item should look
@@ -20,7 +20,6 @@ const Notes = ({ id, title, content, color, loadDataAsync, hideCreateButton, set
         if (event.nativeEvent.state === State.ACTIVE) {
             setTrashOrMenuDisplay(!trashOrMenuDisplay)
             setHideCreateButton(!hideCreateButton)
-        console.log("I've been pressed for 800 milliseconds");
         }
     };
 
@@ -30,7 +29,7 @@ const Notes = ({ id, title, content, color, loadDataAsync, hideCreateButton, set
         )}>
             <LongPressGestureHandler
             onHandlerStateChange={onLongPress}
-            minDurationMs={800}
+            minDurationMs={400}
         >
             <NotesviewContainer >
             <Notesview  >

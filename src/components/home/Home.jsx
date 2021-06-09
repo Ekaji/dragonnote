@@ -6,7 +6,7 @@ import Search from '../search/Search'
 import { useState, useEffect } from 'react';
 import { database } from '../database/Database';
 import  ButtonColorComp  from '../coloredButton/ColoredButton'
-import { FlatList, TouchableWithoutFeedback } from 'react-native';
+import { Keyboard, FlatList, TouchableWithoutFeedback } from 'react-native';
 import CreateNoteButton from '../createNoteButton/CreateNoteButton';
 import { TrashOrMenuContext } from '../../context/TrashOrMenuContext';
 
@@ -19,6 +19,13 @@ const Home = ({ navigation }) => {
     const [showColoredButton, setShowColoredButton] = useState(false)
     const [hideCreateButton, setHideCreateButton] = useState(false)
 
+    // const keyBoardIsShown = 
+    
+    useEffect(() => {
+        Keyboard.addListener('keyboardDidShow', () => { setHideCreateButton(true)} )
+        Keyboard.addListener('keyboardDidHide', () => { setHideCreateButton(false)} )    
+    },[])
+
 
     const loadDataAsync = async () => {
         try{
@@ -28,7 +35,7 @@ const Home = ({ navigation }) => {
             database.setupDatabaseAsync();
             database.fetchData(getNote)
         } catch(e){
-            console.log(e)
+            console.error(e)
         }
     }
 
@@ -103,7 +110,7 @@ const Home = ({ navigation }) => {
     return(
         <TrashOrMenuContext.Provider value={[trashOrMenuDisplay, setTrashOrMenuDisplay]}>
             <Search filterResult={filterResult} />
-            <TouchableWithoutFeedback onPress={() => console.log( 'pressed')}>
+            <TouchableWithoutFeedback >
             <FlatList  
                 data={ data }
                 renderItem = {renderItem}
