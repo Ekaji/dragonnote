@@ -76,36 +76,30 @@ const Home = ({ navigation }) => {
 
     const [filteredData, setFilteredData] = useState(rawDATA)
     // search function
-    // const filterResult = (word) => {
-    //     let oldData = rawDATA.map( rawdata => {
-    //         return {id: rawdata.id, title: rawdata.title.toLowerCase(), content: rawdata.content.toLowerCase(), color: rawdata.color}
-    //     });
-    //    if(word !== ''){
-    //        let result = oldData.filter(data => {
-    //         console.log(word)
-    //            return data.content.includes(word.toLowerCase()) || data.title.includes(word.toLowerCase())
-    //        })
-    //        setFilteredData(result)
-    //    } else  { 
-    //        setFilteredData( rawDATA)
-    //  }}
+    const filterResult = (word) => {
+        let oldData = rawDATA.map( rawdata => {
+            return {id: rawdata.id, title: rawdata.title, content: rawdata.content, color: rawdata.color}
+        });
+       if(word !== ''){
+           let result = oldData.filter(data => {
+            console.log(word)
+               return data.content.includes(word.toLowerCase()) || data.title.includes(word.toLowerCase())
+           })
+           setFilteredData(result)
+       } else  { 
+           setFilteredData(null)
+     }}
+     
 
-    
- 
-     //data passed to flatlist
-    //  const [DATA, setDATA] = useState(rawDATA)
-
-    //  useEffect(() => {
-    //      setDATA(filteredData ? filteredData : rawDATA )
-    //  })
-    
+    const data = filteredData ? filteredData : rawDATA
+    console.log(data)
 
     return(
         <TrashOrMenuContext.Provider value={[trashOrMenuDisplay, setTrashOrMenuDisplay]}>
-            {/* <Search filterResult={filterResult} /> */}
+            <Search filterResult={filterResult} />
             <TouchableWithoutFeedback onPress={() => console.log( 'pressed')}>
             <FlatList  
-                data={ rawDATA }
+                data={ data }
                 renderItem = {renderItem}
                 keyExtractor = {item => item.id.toString()}
             />
