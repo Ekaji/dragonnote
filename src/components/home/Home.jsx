@@ -82,8 +82,14 @@ const Home = ({ navigation }) => {
         });
        if(word !== ''){
            let result = oldData.filter(data => {
-            console.log(word)
-               return data.content.includes(word.toLowerCase()) || data.title.includes(word.toLowerCase())
+               return (
+                data.content.includes(word.toLowerCase()) ||
+                data.title.includes(word.toLowerCase()) ||
+                data.content.includes(word.toUpperCase()) ||
+                data.title.includes(word.toUpperCase()) ||
+                data.content.includes(word) || 
+                data.title.includes(word)
+                   )
            })
            setFilteredData(result)
        } else  { 
