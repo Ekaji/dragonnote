@@ -1,30 +1,33 @@
 // force the state to clear with fast refresh in Expo
 // @refresh reset
-import React from 'react';
+import React from 'react'
 import Notes from '../notes/Notes'
 import Search from '../search/Search'
-import { useState, useEffect } from 'react';
-import { database } from '../database/Database';
-import  ButtonColorComp  from '../coloredButton/ColoredButton'
-import { Keyboard, FlatList, TouchableWithoutFeedback } from 'react-native';
-import CreateNoteButton from '../createNoteButton/CreateNoteButton';
-import { TrashOrMenuContext } from '../../context/TrashOrMenuContext';
+import { useState, useEffect } from 'react'
+import { database } from '../database/Database'
+import { Icon, CheckBox } from 'react-native-elements'
+import { DeleteContext  } from '../../context/deleteContext'
+import ButtonColorComp  from '../coloredButton/ColoredButton'
+import CreateNoteButton from '../createNoteButton/CreateNoteButton'
+import { TrashOrMenuContext } from '../../context/TrashOrMenuContext'
+import { Keyboard, FlatList, TouchableWithoutFeedback, Text, View } from 'react-native'
+
 
 
 const Home = ({ navigation }) => {
     const [ note, getNote ] = useState([]);
     //passed as value to context
     const [trashOrMenuDisplay, setTrashOrMenuDisplay] = useState(false)
+    const [checkedIDS, setCheckedIDS] = useState([]);
     // passed to CreateNoteButton
     const [showColoredButton, setShowColoredButton] = useState(false)
     const [hideCreateButton, setHideCreateButton] = useState(false)
 
-    // const keyBoardIsShown = 
     
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => { setHideCreateButton(true)} )
         Keyboard.addListener('keyboardDidHide', () => { setHideCreateButton(false)} )    
-    },[])
+    },[Keyboard])
 
 
     const loadDataAsync = async () => {
@@ -50,7 +53,7 @@ const Home = ({ navigation }) => {
             loadDataAsync();
             } )
             return reloadData
-    })
+    },[navigation])
 
 
     const renderItem = ( {item} ) => {
@@ -81,6 +84,8 @@ const Home = ({ navigation }) => {
         reverseData()
     },[note])
 
+
+
     const [filteredData, setFilteredData] = useState(rawDATA)
     // search function
     const filterResult = (word) => {
@@ -103,26 +108,58 @@ const Home = ({ navigation }) => {
            setFilteredData(null)
      }}
      
+     //filtered data would come from search, rawData from database
+    let data = filteredData ? filteredData : rawDATA
 
-    const data = filteredData ? filteredData : rawDATA
-    console.log(data)
+    // removing this would cause notes not to display when search 
+    // is hidden because notes depends on filtered data to display, the boolean trashOrmenuDisplay 
+    // is used to toggle search, therefore when set to false 'data' should be the rawData 
+    // from the database.
+    if(!trashOrMenuDisplay){
+        data = rawDATA
+    }
 
-    return(
-        <TrashOrMenuContext.Provider value={[trashOrMenuDisplay, setTrashOrMenuDisplay]}>
-            <Search filterResult={filterResult} />
+
+    return( 
+        <DeleteContext.Provider value={ [ checkedIDS, setCheckedIDS ] } >
+        <TrashOrMenuContext.Provider value={ [ trashOrMenuDisplay, setTrashOrMenuDisplay ] }>
+        
+            <Text style={{fontSize: 30, margin: 10 }}>Notes</Text>
+
+                {
+                 trashOrMenuDisplay ?  
+                    <View  style={{flexDirection: 'row', justifyContent: 'flex-end',  marginRight: 10, marginTop: 12}}>
+                        <Icon  name='trash' type='font-awesome' iconStyle={{marginTop: 15, marginRight: 20 }} color='#000' 
+                            onPress={ () => { 
+                                database.multiDelete(checkedIDS)
+                                loadDataAsync(); 
+                            }
+
+                        } />
+                        <CheckBox onPress={ () => {}}  checked={true}  />
+                    </View>
+                    : 
+                    <Search filterResult={ filterResult } />  
+                }
+
             <TouchableWithoutFeedback >
-            <FlatList  
-                data={ data }
-                renderItem = {renderItem}
-                keyExtractor = {item => item.id.toString()}
-            />
+                {  
+                 data.length == 0 ? <Text> No notes to display </Text> : 
+                    <FlatList  
+                        data={ data }
+                        renderItem = {renderItem}
+                        keyExtractor = {item => item.id.toString()}
+                    />
+                }
           </TouchableWithoutFeedback>
-          {showColoredButton ? <ButtonColorComp /> : null}
+
+          {showColoredButton ? <ButtonColorComp  showColoredButton={showColoredButton}  setShowColoredButton={setShowColoredButton} /> : null}
           {hideCreateButton ?  null :
           <CreateNoteButton  showColoredButton={showColoredButton} setShowColoredButton={setShowColoredButton} />
           
         }
         </TrashOrMenuContext.Provider>
+        </DeleteContext.Provider>
     )
 };
 

@@ -92,6 +92,12 @@ const deleteNote = (id) => {
 }
 
 
+const multiDelete = (ids) => {
+  ids.forEach( id => deleteNote(id) )
+}
+
+
+
 //comment out the below code in production
 // delete table
 // const dropDatabaseTable = async () => {
@@ -125,6 +131,7 @@ const deleteNote = (id) => {
   //  dropDatabaseTable,
       setupDatabaseAsync,
       upDateNoteColor,
+      multiDelete,
       upDateNote,
       insertNote,
       deleteNote,

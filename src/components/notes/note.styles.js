@@ -10,10 +10,11 @@ const TouchableOpacityComp = styled.TouchableOpacity`
 
 const Notesview = styled.View`
         margin: 10px;
-        width: 60%;
+        width: 100%;
         `;
 
 const Text_Title = styled.Text`
+        width: 90%;
         font-size: 20px;
         margin-bottom: 8px;
         `;
@@ -25,10 +26,14 @@ const NotesviewContainer = styled.View`
         `;
 
 const TrashComponent = styled.View`
-        margin-top: auto;
-        margin-bottom: auto; 
-        margin-right: 10px;
+       position: absolute;
+       right: 0px;
         `;
+
+// margin - top : auto;
+// margin - bottom : auto;
+// margin - right : 5 px;
+
 
 const EllipsisMenu = styled.View`
         margin-top: 10px;

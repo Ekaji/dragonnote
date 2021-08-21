@@ -1,12 +1,10 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Icon, Button } from 'react-native-elements'
 import { View, StyleSheet, Text, TextInput} from 'react-native';
 import { createNote } from './createNote.styles'
 
 import { database } from '../database/Database'
 
-// export const bool = false;
 
 const CreateNote = ({ route, navigation }) => {
     const date = new Date();
@@ -52,45 +50,6 @@ const CreateNote = ({ route, navigation }) => {
         });
       },);
 
-
-
-    // useEffect(() => {
-    //   navigation.setOptions({
-    //     // headerStyle: {
-    //     //   backgroundColor: color,
-    //     // },
-    //     headerRight: () => (
-    //       // <View  style={{marginRight: 15, borderRadius: 100}}>
-    //       <Button  onPress={() => {
-    //         navigation.navigate('Home')
-    //           // if an id is not present new content is pushed to the database else the data should be updated
-    //           id === undefined ?  insertDataFunc() : updateNoteContent() 
-    //         } } 
-    //         icon={
-
-    //           // onPress={() => {
-    //           //   navigation.navigate('Home')
-    //           //     // if an id is not present new content is pushed to the database else the data should be updated
-    //           //     id === undefined ?  insertDataFunc() : updateNoteContent() 
-    //           //   } } 
-
-
-    //           <Icon
-    //           reverse
-    //             name="check"
-    //             size={25}
-    //             color={color}
-    //             type='font-awesome'
-    //           />
-    //         }
-          
-    //         // title="save" 
-
-    //         />
-    //       // </View>
-    //       ),
-    //     });
-    //   },);
 
     return (
      <View  style={{flex: 1, backgroundColor: color, }}>

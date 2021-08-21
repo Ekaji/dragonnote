@@ -1,10 +1,9 @@
 import React from 'react'
-import styled from 'styled-components/native';
 import { Icon } from 'react-native-elements'
 import { CreateNoteButtonContainer } from './createNoteButton.styles'
 
 // showColoredButton, setShowColoredButton from Home component
-const CreateButton = ({showColoredButton, setShowColoredButton}) => {   
+const CreateNoteButton = ({showColoredButton, setShowColoredButton}) => {   
  
     return(
         // button component for navigation
@@ -14,4 +13,4 @@ const CreateButton = ({showColoredButton, setShowColoredButton}) => {
     )
 }
 
-export default CreateButton;
+export default CreateNoteButton;

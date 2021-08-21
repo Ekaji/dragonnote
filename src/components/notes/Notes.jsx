@@ -1,9 +1,10 @@
-import React from 'react'
-import { useContext} from 'react';
+import React, {
+    useState, 
+    useContext } from 'react'
 import { Text } from 'react-native';
-import { Icon } from 'react-native-elements'
-import { database } from '../database/Database'
+import { CheckBox } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native';
+import { DeleteContext } from '../../context/deleteContext'
 import { TrashOrMenuContext } from '../../context/TrashOrMenuContext';
 import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
 import { TouchableOpacityComp, NotesviewContainer, TrashComponent, Notesview, Text_Title } from './note.styles'
@@ -15,6 +16,7 @@ const Notes = ({ id, title, content, color, loadDataAsync, hideCreateButton, set
     //applies css styling to either show or hide checkbox
     const [trashOrMenuDisplay, setTrashOrMenuDisplay] = useContext(TrashOrMenuContext)
 
+    const [checkedIDS, setCheckedIDS] = useContext(DeleteContext);
     
     const onLongPress = (event) => {
         if (event.nativeEvent.state === State.ACTIVE) {
@@ -22,6 +24,16 @@ const Notes = ({ id, title, content, color, loadDataAsync, hideCreateButton, set
             setHideCreateButton(!hideCreateButton)
         }
     };
+
+    const [checkedState, setCheckedState] = useState(false);
+
+   const handleCheckedState = () => {
+       if (checkedState === !false) {
+         return  setCheckedIDS( () => checkedIDS.filter(checkedID => checkedID !== id))
+       }
+      return setCheckedIDS( () => checkedIDS.concat(id))
+   }
+
 
     return(
         <TouchableOpacityComp color={color} onPress={() => navigation.navigate('Createnote', 
@@ -33,21 +45,24 @@ const Notes = ({ id, title, content, color, loadDataAsync, hideCreateButton, set
         >
             <NotesviewContainer >
             <Notesview  >
-                <Text_Title>{ title }</Text_Title>
-                <Text>{ content }</Text>
-            </Notesview>
+                <Text_Title numberOfLines={1} >{ title }</Text_Title>
+                <Text numberOfLines={2} style={{overflow: 'hidden', marginRight: 15 }}>{ content }</Text>
 
-            {trashOrMenuDisplay ?
+                 {trashOrMenuDisplay ?
             <TrashComponent> 
-                <Icon  name='trash' type='font-awesome' color={color} raised
-                    onPress={ () => { 
-                        database.deleteNote(id);       
-                        loadDataAsync();
-                    }
-                    } />
+                <CheckBox
+                    onPress={() => {
+                        setCheckedState(!checkedState)
+                        handleCheckedState()
+                    }}
+                    checked={checkedState}
+                    />
             </TrashComponent>
                 : null
             }
+            </Notesview>
+
+           
             
             </NotesviewContainer>
             </LongPressGestureHandler>

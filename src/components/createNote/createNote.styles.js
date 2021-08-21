@@ -5,7 +5,7 @@ const createNote = StyleSheet.create({
     textInputTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        height: 32,
+        height: 64,
         margin: 12,
         },
 
