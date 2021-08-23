@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Icon, Button } from 'react-native-elements'
-import { View, StyleSheet, Text, TextInput} from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { BackHandler } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
+import { Icon } from 'react-native-elements'
+import { View, Text, TextInput} from 'react-native';
 import { createNote } from './createNote.styles'
 
 import { database } from '../database/Database'
@@ -27,11 +29,25 @@ const CreateNote = ({ route, navigation }) => {
     }
 
 
+
+  useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+               navigation.navigate('Home')
+            };
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+            return () => {
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            } 
+        }, [navigation])
+    )
+
+
+
     useEffect(() => {
       navigation.setOptions({
-        // headerStyle: {
-        //   backgroundColor: color,
-        // },
+        
         headerRight: () => (
           <View  style={{marginRight: 20, borderRadius: 100}}>
               <Icon

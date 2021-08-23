@@ -11,10 +11,6 @@ import Home from './src/components/home/Home'
 import { createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-const Tab = createBottomTabNavigator();
-
-
 
 const App = ( ) => {
 
