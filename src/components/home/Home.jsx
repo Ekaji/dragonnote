@@ -32,25 +32,19 @@ const Home = ({ navigation }) => {
     },[Keyboard])
 
 
-    // const loadDataAsync = async () => {
-    //     try{
-    //         // usefull in developement
-    //         // database.dropDatabaseTable(); 
-    //         // database.setupNoteAsync();
-    //         database.setupDatabaseAsync();
-    //         database.fetchData(getNote)
-    //     } catch(e){
-    //         console.error(e)
-    //     }
-    // }
-
-    const loadDataAsync = () => {
+    const loadDataAsync = async () => {
+        try{
             // usefull in developement
             // database.dropDatabaseTable(); 
             // database.setupNoteAsync();
             database.setupDatabaseAsync();
-            database.fetchData(getNote)  
+            database.fetchData(getNote)
+        } catch(e){
+            console.error(e)
+        }
     }
+
+
 
     useEffect(() => {
         //loads data when app starts the first time
@@ -145,20 +139,7 @@ const Home = ({ navigation }) => {
                 // is hidden because notes depends on filtered data to display, the boolean trashOrmenuDisplay 
                 // is used to toggle search, therefore when set to false 'data' should be the rawData 
                 // from the database.
-                if(!trashOrMenuDisplay){
-                    data = rawDATA
-    }
-    
-    // const [markAll, setMarkAll] = useState(false)
-    // const handleMarkAll =  () => {
-    //     let getIds = markAll ? data.map(data => data.id) : []
-    //     setCheckedIDS( getIds )
-    //     console.log( getIds, 'home', markAll)
-    // }
-
-    // useEffect(() => {
-    //     handleMarkAll()
-    // }, [markAll])
+  
 
 
     return( 
